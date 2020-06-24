@@ -11,14 +11,32 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private float changeTIme = 3.0f;
 
-    Rigidbody2D rigidBody2D;
-    int direction = 1;
+    private int direction = 1;
+
+    private Rigidbody2D rigidBody2D;
+    private Animator animator;
+
 
     private void Start()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
         StartCoroutine(DirectionRoutine());
+    }
+
+    private void Update()
+    {
+        if (vertical)
+        {
+            animator.SetFloat("Move X", 0);
+            animator.SetFloat("Move Y", direction);
+        }
+        else
+        {
+            animator.SetFloat("Move X", direction);
+            animator.SetFloat("Move Y", 0);
+        }
     }
 
     private void FixedUpdate()
