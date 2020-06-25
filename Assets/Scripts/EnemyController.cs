@@ -61,7 +61,7 @@ public class EnemyController : MonoBehaviour
 
         if(player != null)
         {
-            player.changeHealth(-1);
+            player.ChangeHealth(-1);
         }
     }
     IEnumerator DirectionRoutine()

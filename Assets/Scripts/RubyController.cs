@@ -22,6 +22,9 @@ public class RubyController : MonoBehaviour
     private Animator animator;
     private Vector2 lookDirection = new Vector2(1, 0);
 
+    [SerializeField]
+    private GameObject projectilePrefab;
+
     void Start()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
@@ -52,6 +55,11 @@ public class RubyController : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Launch();
+        }
+
         animator.SetFloat("Look X", lookDirection.x);
         animator.SetFloat("Look Y", lookDirection.y);
         animator.SetFloat("Speed", move.magnitude);
@@ -60,13 +68,13 @@ public class RubyController : MonoBehaviour
     private void FixedUpdate()
     { 
         Vector2 position = rigidBody2D.position;
-        position.x = position.x + _speed* horizontal * Time.deltaTime;
-        position.y = position.y + _speed* vertical * Time.deltaTime;
+        position.x += _speed* horizontal * Time.deltaTime;
+        position.y += _speed* vertical * Time.deltaTime;
 
         rigidBody2D.MovePosition(position);
     }
 
-    public void changeHealth(int amount)
+    public void ChangeHealth(int amount)
     {
         if (amount < 0)
         {
@@ -80,5 +88,16 @@ public class RubyController : MonoBehaviour
 
         health = Mathf.Clamp(health + amount, 0, maxHealth);
         Debug.Log(health);
+    }
+
+    private void Launch()
+    {
+        GameObject projectileObject = Instantiate(projectilePrefab, rigidBody2D.position + Vector2.up * 0.5f, Quaternion.identity);
+
+
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+        projectile.Launch(lookDirection, 300);
+
+        animator.SetTrigger("Launch");
     }
 }
