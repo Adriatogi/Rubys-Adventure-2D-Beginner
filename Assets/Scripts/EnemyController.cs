@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     private Rigidbody2D rigidBody2D;
     private Animator animator;
 
+    private bool broken = true;
 
     private void Start()
     {
@@ -27,6 +28,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
+        if (!broken) return;
+
         if (vertical)
         {
             animator.SetFloat("Move X", 0);
@@ -41,6 +44,8 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!broken) return;
+
         Vector2 position = rigidBody2D.position;
 
         if (vertical)
@@ -55,14 +60,21 @@ public class EnemyController : MonoBehaviour
         rigidBody2D.MovePosition(position);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         RubyController player = collision.gameObject.GetComponent<RubyController>();
 
-        if(player != null)
+        if (player != null)
         {
             player.ChangeHealth(-1);
         }
+    }
+
+    public void Fix()
+    {
+        broken = false;
+        rigidBody2D.simulated = false;
+        animator.SetTrigger("Fixed");
     }
     IEnumerator DirectionRoutine()
     {

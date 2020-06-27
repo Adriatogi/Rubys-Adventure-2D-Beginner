@@ -16,9 +16,20 @@ public class Projectile : MonoBehaviour
         rigidBody2D.AddForce(direction * force);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Update()
     {
-        Debug.Log("Projectile Collision with " + collision.gameObject);
+        if (transform.position.magnitude > 1000.0f)
+            Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        EnemyController e = collision.GetComponent<EnemyController>();
+
+        if (e != null)
+        {
+            e.Fix();
+        }
 
         Destroy(gameObject);
     }
