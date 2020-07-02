@@ -25,10 +25,17 @@ public class RubyController : MonoBehaviour
     [SerializeField]
     private GameObject projectilePrefab;
 
+    private AudioSource audioSource;
+    [SerializeField]
+    private AudioClip cogThrow;
+    [SerializeField]
+    private AudioClip playerHit;
+
     void Start()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         health = maxHealth;
     }
@@ -99,6 +106,7 @@ public class RubyController : MonoBehaviour
             invincibleTimer = timeInvincible;
 
             animator.SetTrigger("Hit");
+            PlaySound(playerHit);
         }
 
         health = Mathf.Clamp(health + amount, 0, maxHealth);
@@ -114,5 +122,11 @@ public class RubyController : MonoBehaviour
         projectile.Launch(lookDirection, 300);
 
         animator.SetTrigger("Launch");
+        PlaySound(cogThrow);
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
     }
 }
